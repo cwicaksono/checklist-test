@@ -2,10 +2,6 @@
 
 class AuthTest extends TestCase
 {
-    // public function testSomethingIsTrue()
-    // {
-    //     $this->assertTrue(true);
-    // }
     public function testAuthWithEmptyEmailAndPassword(){
         $response = $this->call('GET', '/api/login');
 
