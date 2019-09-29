@@ -23,6 +23,7 @@ class CreateChecklistsTable extends Migration
             $table->integer('updated_by')->nullable();
             $table->timestamp('due')->nullable();
             $table->integer('urgency');
+            $table->integer('created_by');
             $table->timestamps();
         });
     }

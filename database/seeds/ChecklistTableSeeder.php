@@ -21,6 +21,7 @@ class ChecklistTableSeeder extends Seeder
             'updated_by' => null,
             'due' => null,
             'urgency' => 0,
+            'created_by' => 1
         ]);
     }
 }

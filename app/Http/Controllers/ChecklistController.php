@@ -35,16 +35,101 @@ class ChecklistController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-        'todo' => 'required',
-        'description' => 'required',
-        'category' => 'required'
-         ]);
-        if(Auth::user()->todo()->Create($request->all())){
-            return response()->json(['status' => 'success']);
+        // $content = json_decode($request->getContent());
+        // $this->validate($request, [
+        //     'data' => 'required'
+        // ]);
+
+        $content = json_decode($request->getContent());
+
+        if($content){
+            $attributes = $content->data->attributes;
+
+            $data = array(
+                'data' => $content,
+                'attributes' => $content->data->attributes,
+                'object_domain' => $attributes->object_domain,
+                'object_id' => $attributes->object_id,
+                'due' => $attributes->due,
+                'urgency' => $attributes->urgency,
+                'description' => $attributes->description,
+                'items' => $attributes->items,
+                'task_id' => $attributes->task_id
+            );
+            
+            $rules = array(
+                'data' => 'required',
+                'attributes' => 'required',
+                'object_domain' => 'required',
+                'object_id' => 'required',
+                'urgency' => 'required',
+            );
+            $validator = \Validator::make($data, $rules);
+
+            if ($validator->fails()) {
+                $error = $validator->errors();
+                echo $error;
+            }else{
+                
+                $checklist = new Checklist;
+                $checklist->object_id = $attributes->object_id;
+                $checklist->object_domain = $attributes->object_domain;
+                $checklist->description = $attributes->description;
+                $checklist->due = date('Y/m/d H:i:s', strtotime($attributes->due));
+                $checklist->urgency = $attributes->urgency;
+                $checklist->created_by = Auth::user()->id;
+                $checklist->is_completed = false;
+                $checklist->save();
+
+                $status_code = 200;
+                
+                $data = array(
+                    'type' => 'checklists',
+                    'id' => $checklist->id,
+                    'attributes' => array(
+                        'object_domain' => $checklist->object_domain,
+                        'object_id' => $checklist->object_id,
+                        'task_id' => '123', // belum ada
+                        'description' => $checklist->description,
+                        'is_completed' => false,
+                        'due' => $checklist->due,
+                        'urgency' => $checklist->urgency,
+                        'completed_at' => null,
+                        'updated_by' => null,
+                        'created_by' => $checklist->created_by,
+                        'created_at' => $checklist->created_at,
+                        'updated_at' => $checklist->updated_at
+                    ),
+                    'links' => array(
+                        'self' => url("api/v1/checklists/".$checklist->id)
+                    )
+                );
+                $response = array(
+                    'data' => $data
+                );
+            }
         }else{
-            return response()->json(['status' => 'fail']);
+            $response = array(
+                'status' => '500',
+                'error' => 'Server Error'
+            );
+            $status_code = 404;
         }
+        return response()->json($response, $status_code); 
+
+        // print_r($validation);
+        
+        
+        // $this->validate($request, [
+        //     'todo' => 'required',
+        //     'description' => 'required',
+        //     'category' => 'required'
+        // ]);
+        // if(Auth::user()->todo()->Create($request->all())){
+        //     return response()->json(['status' => 'success']);
+        // }else{
+        //     return response()->json(['status' => 'fail']);
+        // }
     }
     /**
      * Display the specified resource.

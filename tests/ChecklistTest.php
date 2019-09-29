@@ -3,7 +3,7 @@
 class ChecklistTest extends TestCase
 {
     var $header = [
-        'HTTP_Authorization' => 'Bearer dmJZNU5QVFNTQ21nb1BaOHpHNmpzS2hSWVdkc1Q1eXphcWxFUUllOA=='
+        'HTTP_Authorization' => 'Bearer UzdLVkl6M1V0MXVRZ3JVVmRrWUhIbTk1c21rNFFJRGtHYU00MUNrWA=='
     ];
 
     public function testCheckListDetailWithEmptyToken(){
@@ -52,7 +52,15 @@ class ChecklistTest extends TestCase
         $response->seeJson($param);
     }
 
-    public function testCheckListDetailWithResponse500(){
-        $this->assertTrue(true);
-    }
+    // public function testCheckListDetailWithResponse500(){
+    //     $this->assertTrue(true);
+    // }
+
+    // public function testCheckListCreateChecklist(){
+        // $response = $this->get('/api/checklists/1', $this->header);
+
+        // $content = json_decode($response->response->getContent());
+        // print_r($content);
+        // $this->assertEquals($content->data->type, 'checklists');
+    // }
 }

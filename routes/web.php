@@ -26,4 +26,5 @@ $router->group(['prefix' => 'api/'], function() use ($router) {
     $router->delete('todo/{id}/', 'TodoController@destroy');
 
     $router->get('checklists/{id}','ChecklistController@show');
+    $router->post('checklists/','ChecklistController@store');
 });
